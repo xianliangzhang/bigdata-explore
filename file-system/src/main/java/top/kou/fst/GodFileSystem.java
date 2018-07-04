@@ -11,12 +11,14 @@ public class GodFileSystem {
     private static final String uri_prefix = "hdfs://koyou.top:9000";
     private static final String uri_path = "/readme.txt";
 
-    public static void main(String[] args) throws IOException {
+    static {
         URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
-        URL url = new URL("hdfs://koyou.top:9000/readme.txt");
+    }
+
+    public static void main(String[] args) throws IOException {
+        URL url = new URL("hdfs://localhost:9000/readme.txt");
         try (InputStream in = url.openStream()) {
             IOUtils.copyBytes(in, System.out, 4096, false);
         }
-
     }
 }

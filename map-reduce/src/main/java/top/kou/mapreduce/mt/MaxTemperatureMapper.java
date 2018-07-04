@@ -1,4 +1,4 @@
-package top.kou.temperature;
+package top.kou.mapreduce.mt;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;

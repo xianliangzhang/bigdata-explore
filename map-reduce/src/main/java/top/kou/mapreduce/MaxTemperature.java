@@ -1,4 +1,4 @@
-package top.kou.temperature;
+package top.kou.mapreduce;
 
 
 import org.apache.hadoop.conf.Configuration;
@@ -10,12 +10,14 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.kou.mapreduce.mt.MaxTemperatureMapper;
+import top.kou.mapreduce.mt.MaxTemperatureReducer;
 
 import java.util.Arrays;
 
 public class MaxTemperature {
     private static final Logger logger = LoggerFactory.getLogger(MaxTemperature.class);
-    private static final String file_input_path = "/Users/hack/lab/bigdata-explore/max-temperature/src/main/resources/temp.txt";
+    private static final String file_input_path = "/Users/hack/lab/bigdata-explore/map-reduce/src/main/resources/temp.txt";
     private static final String file_output_path = "max-temperature-output";
 
     public static void main(String[] args) throws Exception {
