@@ -1,0 +1,25 @@
+# Windows:
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Mac
+.DS_Store
+
+# Others
+*.log
+*.iml
+*.class
+*.war
+*.tar
+*.jar
+*.gz
+*.tar.gz
+.idea/
+target/
+logs/
+log/
+temp/
+tmp/
+
+
