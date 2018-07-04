@@ -15,12 +15,11 @@ import java.util.Arrays;
 
 public class MaxTemperature {
     private static final Logger logger = LoggerFactory.getLogger(MaxTemperature.class);
-    private static final String file_input_path = "/Users/hack/Workspace/study/max-temperature/src/main/resources/temp.txt";
+    private static final String file_input_path = "/Users/hack/lab/bigdata-explore/max-temperature/src/main/resources/temp.txt";
     private static final String file_output_path = "max-temperature-output";
 
     public static void main(String[] args) throws Exception {
         logger.info("args: {}", Arrays.deepToString(args));
-
 
         Configuration configuration = new Configuration();
         Job job = Job.getInstance(configuration, "");
@@ -37,6 +36,6 @@ public class MaxTemperature {
         FileInputFormat.addInputPath(job, new Path(args.length == 2 ? args[0] : file_input_path));
         FileOutputFormat.setOutputPath(job, new Path(args.length == 2 ? args[1] : file_output_path));
 
-        System.out.println(job.waitForCompletion(true));
+        System.out.println(job.waitForCompletion(true) ? "- 任务执行完成" : "- 任务执行失败");
     }
 }
