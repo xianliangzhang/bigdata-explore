@@ -12,7 +12,7 @@
     <name>map-reduce</name>
 
     <properties>
-        <main.class>xx</main.class>
+        <main.class>top.kou.mapreduce.CommonUtils</main.class>
     </properties>
 
     <dependencies>
@@ -48,7 +48,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <artifactId>maven-shade-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
