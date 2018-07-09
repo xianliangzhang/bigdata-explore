@@ -164,8 +164,8 @@ public class MultipleInputOutputDemo {
         //jobConf.setPartitionerClass(YearlyPartitioner.class);
         //jobConf.setNumReduceTasks(3);
 
-        MultipleInputs.addInputPath(jobConf, new Path(CommonUtils.getLocalPath("temp.txt")), TextInputFormat.class, ShortFormatTemperatureMapper.class);
-        MultipleInputs.addInputPath(jobConf, new Path(CommonUtils.getLocalPath("temp-x.txt")), TextInputFormat.class, LongFormatTemperatureMapper.class);
+        MultipleInputs.addInputPath(jobConf, new Path(CommonUtils.getLocalPath("temperature.txt")), TextInputFormat.class, ShortFormatTemperatureMapper.class);
+        MultipleInputs.addInputPath(jobConf, new Path(CommonUtils.getLocalPath("temperature-x.txt")), TextInputFormat.class, LongFormatTemperatureMapper.class);
 
 
         FileOutputFormat.setOutputPath(jobConf, new Path("output"));

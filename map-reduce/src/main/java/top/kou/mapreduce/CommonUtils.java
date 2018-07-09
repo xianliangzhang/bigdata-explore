@@ -1,15 +1,21 @@
 package top.kou.mapreduce;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.SequenceFile;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.util.ReflectionUtils;
 
-import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
 
 public final class CommonUtils {
     public static final String DEFAULT_LOCAL_FILE_PATH = "/Users/hack/lab/bigdata-explore/map-reduce/src/main/resources/";
     public static final String DEFAULT_LOCAL_HDFS_PREFIX = "hdfs://localhost:9000";
-
 
     public static final String getLocalPath(String path) {
         if (path.startsWith(DEFAULT_LOCAL_FILE_PATH)) {
@@ -18,11 +24,28 @@ public final class CommonUtils {
         return DEFAULT_LOCAL_FILE_PATH.concat(path);
     }
 
-    public static final String[] splits(String words) {
-        if (words == null || words.trim().length() == 0) {
+    public static final String[] splits(Text text) {
+        if (text == null || text.toString().trim().replaceAll(" +", " ").length() == 0) {
             return new String[0];
         }
-        return words.trim().replaceAll(" +", " ").split(" ");
+        return text.toString().trim().replaceAll(" +", " ").split(" ");
+    }
+
+    public static String loadSequenceFileContent(String file) {
+        try {
+            Configuration configuration = new Configuration();
+            SequenceFile.Reader reader = new SequenceFile.Reader(configuration, SequenceFile.Reader.file(new Path(file)));
+            Writable key = (Writable) ReflectionUtils.newInstance(reader.getKeyClass(), configuration);
+            Writable value = (Writable) ReflectionUtils.newInstance(reader.getValueClass(), configuration);
+
+            StringBuilder sb = new StringBuilder();
+            while (reader.next(key, value)) {
+                sb.append(key).append(" ").append(value).append("\n");
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void main(String[] args) {

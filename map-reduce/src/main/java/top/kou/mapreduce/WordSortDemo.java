@@ -27,7 +27,7 @@ public class WordSortDemo {
 
         @Override
         public void map(LongWritable longWritable, Text text, OutputCollector<Text, NullWritable> outputCollector, Reporter reporter) throws IOException {
-            String[] arr = CommonUtils.splits(text.toString());
+            String[] arr = CommonUtils.splits(text);
             for (String ar : arr) {
                 outputCollector.collect(new Text(ar), NullWritable.get());
             }

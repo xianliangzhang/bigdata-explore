@@ -1,0 +1,3 @@
+s001 Beijing-China-Station
+s002 Tokyo-Japan-Station
+s003 NewYork-USC-Station
