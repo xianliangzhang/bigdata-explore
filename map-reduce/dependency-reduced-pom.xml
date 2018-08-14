@@ -32,8 +32,5 @@
       </exclusions>
     </dependency>
   </dependencies>
-  <properties>
-    <main.class>top.kou.mapreduce.CommonUtils</main.class>
-  </properties>
 </project>
 

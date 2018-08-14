@@ -11,9 +11,9 @@
     <artifactId>map-reduce</artifactId>
     <name>map-reduce</name>
 
-    <properties>
-        <main.class>top.kou.mapreduce.CommonUtils</main.class>
-    </properties>
+    <!--<properties>
+        <main.class>top.kou.mapreduce.common.CommonUtils</main.class>
+    </properties>-->
 
     <dependencies>
         <dependency>
