@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MaxTemperatureDemo {
-    private static final String ncdc = "/Users/hack/Workspace/bigdata-explore/map-reduce/src/main/resources/temperature.txt";
+    private static final String ncdc = "/Users/hack/Workspace/bigdata-explore/src/main/resources/temperature.txt";
 
     static class TemperatureWritable implements WritableComparable<TemperatureWritable> {
         private Text station;
@@ -95,11 +95,6 @@ public class MaxTemperatureDemo {
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 2) {
-            System.err.println("Usage: MaxTemperatureDemo <input> <output>");
-            System.exit(-1);
-        }
-
         Configuration configuration = new Configuration();
         configuration.setBoolean("mapred.compress.map.output", true);
         configuration.setClass("mapred.map.output.compression.codec", GzipCodec.class, CompressionCodec.class);
