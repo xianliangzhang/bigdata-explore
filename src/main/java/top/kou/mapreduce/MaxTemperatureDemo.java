@@ -117,8 +117,8 @@ public class MaxTemperatureDemo {
         FileOutputFormat.setCompressOutput(job, true);
         FileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
 
-        FileInputFormat.addInputPath(job, new Path(ncdc));
-        FileOutputFormat.setOutputPath(job, new Path("output"));
+        FileInputFormat.addInputPath(job, args.length >= 1 ? new Path(args[0]) : new Path(ncdc));
+        FileOutputFormat.setOutputPath(job, args.length >= 2 ? new Path(args[1]) : new Path("output"));
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
