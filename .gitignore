@@ -8,6 +8,7 @@ Desktop.ini
 
 # Others
 *.log
+*.log.*
 *.iml
 *.class
 *.war
@@ -21,5 +22,6 @@ logs/
 log/
 temp/
 tmp/
+output/
 
 

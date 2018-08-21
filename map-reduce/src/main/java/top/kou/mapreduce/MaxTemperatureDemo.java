@@ -5,7 +5,9 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.compress.CompressionCodec;
+import org.apache.hadoop.io.compress.GzipCodec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -20,13 +22,13 @@ import java.util.Objects;
 public class MaxTemperatureDemo {
     private static final String ncdc = "/Users/hack/Workspace/bigdata-explore/map-reduce/src/main/resources/temperature.txt";
 
-    static class Temperature implements Writable {
+    static class TemperatureWritable implements WritableComparable<TemperatureWritable> {
         private Text station;
         private IntWritable year;
         private IntWritable temperature;
 
-        public static Temperature parse(String station, int year, int temp) {
-            Temperature temperature = new Temperature();
+        public static TemperatureWritable parse(String station, int year, int temp) {
+            TemperatureWritable temperature = new TemperatureWritable();
             temperature.station = new Text(station);
             temperature.year = new IntWritable(year);
             temperature.temperature = new IntWritable(temp);
@@ -37,7 +39,7 @@ public class MaxTemperatureDemo {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Temperature that = (Temperature) o;
+            TemperatureWritable that = (TemperatureWritable) o;
             return Objects.equals(station, that.station) && Objects.equals(year, that.year) && Objects.equals(temperature, that.temperature);
         }
 
@@ -59,6 +61,12 @@ public class MaxTemperatureDemo {
             this.year.readFields(dataInput);
             this.temperature.readFields(dataInput);
         }
+
+        @Override
+        public int compareTo(TemperatureWritable o) {
+            if (year.compareTo(o.year) > 0) return 1;
+            return temperature.compareTo(o.temperature);
+        }
     }
 
     static class MaxTemperatureMapper extends Mapper<LongWritable, Text, IntWritable, IntWritable> {
@@ -66,10 +74,8 @@ public class MaxTemperatureDemo {
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             if (value.getLength() != 14) {
                 ;
-            }
-            else {
-                String temp= value.toString();
-                //String station = temp.substring(0, 4);
+            } else {
+                String temp = value.toString();
                 String year = temp.substring(4, 8);
                 String temperature = temp.substring(12);
                 context.write(new IntWritable(Integer.parseInt(year)), new IntWritable(Integer.parseInt(temperature)));
@@ -94,9 +100,12 @@ public class MaxTemperatureDemo {
             System.exit(-1);
         }
 
-        Job job = Job.getInstance(new Configuration());
+        Configuration configuration = new Configuration();
+        configuration.setBoolean("mapred.compress.map.output", true);
+        configuration.setClass("mapred.map.output.compression.codec", GzipCodec.class, CompressionCodec.class);
+
+        Job job = Job.getInstance(configuration);
         job.setJarByClass(MaxTemperatureDemo.class);
-        job.setJobName("Max-Temperature");
 
         job.setMapperClass(MaxTemperatureMapper.class);
         job.setReducerClass(MaxTemperatureReducer.class);
@@ -104,6 +113,9 @@ public class MaxTemperatureDemo {
         job.setMapOutputValueClass(IntWritable.class);
         job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(IntWritable.class);
+
+        FileOutputFormat.setCompressOutput(job, true);
+        FileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
 
         FileInputFormat.addInputPath(job, new Path(ncdc));
         FileOutputFormat.setOutputPath(job, new Path("output"));
