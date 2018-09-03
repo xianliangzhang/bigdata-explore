@@ -44,7 +44,7 @@ public class GenerateTemperatureDemo {
 
             out.writeChars(temperature.toString());
         }
-        out.sync();
+        out.hsync();
         out.close();
     }
 }

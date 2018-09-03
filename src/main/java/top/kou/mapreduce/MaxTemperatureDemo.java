@@ -1,6 +1,7 @@
 package top.kou.mapreduce;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -13,13 +14,16 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.Tool;
+import top.kou.common.job.DrivableJob;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 
-public class MaxTemperatureDemo {
+@DrivableJob(name = "MaxTemperatureDemo", input = "temperature.txt")
+public class MaxTemperatureDemo extends Configured implements Tool {
     private static final String ncdc = "/Users/hack/Workspace/bigdata-explore/src/main/resources/temperature.txt";
 
     static class TemperatureWritable implements WritableComparable<TemperatureWritable> {
@@ -94,8 +98,9 @@ public class MaxTemperatureDemo {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        Configuration configuration = new Configuration();
+    @Override
+    public int run(String[] strings) throws Exception {
+        Configuration configuration = getConf();
         configuration.setBoolean("mapred.compress.map.output", true);
         configuration.setClass("mapred.map.output.compression.codec", GzipCodec.class, CompressionCodec.class);
 
@@ -112,10 +117,9 @@ public class MaxTemperatureDemo {
         FileOutputFormat.setCompressOutput(job, true);
         FileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
 
-        FileInputFormat.addInputPath(job, args.length >= 1 ? new Path(args[0]) : new Path(ncdc));
-        FileOutputFormat.setOutputPath(job, args.length >= 2 ? new Path(args[1]) : new Path("output"));
-
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        FileInputFormat.addInputPath(job, new Path(strings[0]));
+        FileOutputFormat.setOutputPath(job, new Path(strings[1]));
+        return job.waitForCompletion(true) ? 0 : 1;
     }
 
 }
